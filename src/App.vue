@@ -49,7 +49,7 @@ export default {
   name: "App",
   data() {
     return {
-      api_chave: "YOUR_KEY",
+      api_chave: "YOUR_KEY-_HERE",
       url_base: "http://api.openweathermap.org/data/2.5/",
       query: "",
       weather: {},
