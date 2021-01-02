@@ -1,7 +1,11 @@
 <template>
-  <div id="app" :class="typeof weather.main !='undefined' && weather.main.temp > 16 ? 'warm': ''">
+  <div
+    id="app"
+    :class="
+      typeof weather.main != 'undefined' && weather.main.temp > 16 ? 'warm' : ''
+    "
+  >
     <main>
-
       <div class="elementos">
         <div class="caixa-pesquisa">
           <input
@@ -13,33 +17,40 @@
           />
         </div>
 
-<div class="content">
+        <div class="content">
+          <div v-if="falhas == false">
+            <div class="clima" v-if="typeof weather.main != 'undefined'">
+              <div class="caixa-localizacao">
+                <div class="localizacao">
+                  {{ weather.name }}, {{ weather.sys.country }}
+                </div>
+                <div class="data">{{ dataBuilder() }}</div>
+              </div>
+              <div class="caixa-tempo">
+                <div class="temp">
+                  {{
+                    Math.round(weather.main.temp).toString().substring(0, 2)
+                  }}°c
+                </div>
+                <div class="tempo">{{ weather.weather[0].main }}</div>
+              </div>
 
+              <div class="infos">
+                <div class="card"> <i class="fa fa-thermometer-quarter" aria-hidden="true"></i>
 
-        <div v-if="falhas == false">
-
-        <div class="clima" v-if="typeof weather.main != 'undefined'">
-          <div class="caixa-localizacao">
-            <div class="localizacao">{{weather.name}}, {{weather.sys.country}}</div>
-            <div class="data">{{ dataBuilder()}}</div>
+                  {{ weather.main.feels_like.toString().substring(0, 2) }}°
+                </div>
+                <div class="card"><i class="fas fa-wind"></i> {{ weather.wind.speed }} km/h</div>
+                <div class="card"><i class="fas fa-tachometer-alt"></i> {{ weather.main.pressure }} mb</div>
+                <div class="card"><i class="fa fa-tint" aria-hidden="true"></i> {{ weather.main.humidity }}%</div>
+              </div>
+            </div>
           </div>
-
-          <div class="caixa-tempo">
-            <div class="temp">{{ Math.round(weather.main.temp) }}°c</div>
-            <div class="tempo">{{ weather.weather[0].main }}</div>
+          <div class="falha" v-else>
+            <h1>Desculpe, não encontramos a loalização digitada..</h1>
           </div>
         </div>
-        </div>
-
-        <div class="falha" v-else>
-        <h1>Desculpe, não encontramos a loalização digitada..</h1>
       </div>
-
-      </div>
-
-      </div>
-      
-
     </main>
   </div>
 </template>
@@ -49,11 +60,11 @@ export default {
   name: "App",
   data() {
     return {
-      api_chave: "YOUR_KEY-_HERE",
+      api_chave: "1f5b5581361ad6544c479845384e153b",
       url_base: "http://api.openweathermap.org/data/2.5/",
       query: "",
       weather: {},
-      falhas: false
+      falhas: false,
     };
   },
   methods: {
@@ -62,9 +73,9 @@ export default {
         fetch(
           `${this.url_base}weather?q=${this.query}&units=metriic&APPID=${this.api_chave}`
         )
-          .then(res => {
-            res.status == 404 ? this.falhas = true : this.falhas = false;
-          
+          .then((res) => {
+            res.status == 404 ? (this.falhas = true) : (this.falhas = false);
+
             return res.json();
           })
           .then(this.setResults);
@@ -89,7 +100,7 @@ export default {
         "Setembro",
         "Outubro",
         "Novembro",
-        "Dezembro"
+        "Dezembro",
       ];
       let days = [
         "Domingo",
@@ -98,7 +109,7 @@ export default {
         "Quarta-feira",
         "Quinta-Feira",
         "Sexta-feira",
-        "Sábado"
+        "Sábado",
       ];
 
       let day = days[d.getDay()];
@@ -106,8 +117,8 @@ export default {
       let month = months[d.getMonth()];
       let year = d.getFullYear();
       return `${day} ${date} ${month} ${year}`;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -207,7 +218,7 @@ main {
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
 }
 
-.falha h1{
+.falha h1 {
   text-align: center;
   color: #fff;
   text-shadow: 3px 6px rgba(0, 0, 0, 0.25);
@@ -215,13 +226,20 @@ main {
   background-color: rgba(255, 255, 255, 0.25);
   padding: 1%;
   border-radius: 15px;
-
 }
-.content{
-  
+.content {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 10%;
+}
+.infos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.infos > div {
+  margin: 30px 10px;
+  color: white;
 }
 </style>
